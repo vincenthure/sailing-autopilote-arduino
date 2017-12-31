@@ -98,6 +98,8 @@ push_param();
 
 void Data::change_cap( int val)
 {
+_param[CAP] /= 10;
+_param[CAP] *= 10;
 _param[CAP] += val;
 
 if (_param[CAP] > 359) _param[CAP] -= 360;  
@@ -114,10 +116,6 @@ if(index > (PARAM_SIZE-1) ) return 0;
 return (float)(_param[index])/10; 
 }
 
-int Data::get_cap( )
-{
-return _param[CAP];
-}
 
 bool Data::get_actif( )
 {

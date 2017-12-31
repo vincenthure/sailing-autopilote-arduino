@@ -9,21 +9,12 @@
 
 class Transfert
 {
-public  :  Transfert(PID* _pilote, double* Cap, double* Kp, double* Ki, double* Kd, double* Imax, double* Vmin, double* Input, double* Output );
-           void get_data();
-           void send_data();
-           void send_baregraphe();
+public  :  Transfert();
+           void get_data_6( double* prm0, double* prm1, double* prm2, double* prm3, double* prm4, double* prm5  );
+           void send_data_6( double prm0, double prm1, double prm2, double prm3, double prm4, double prm5 );
+           void send_data_2( double prm0, double prm1 );
            
-private :  double  *_Cap,
-                   *_Kp,
-                   *_Ki,
-                   *_Kd,
-                   *_Imax,
-                   *_Vmin,
-                   *_Input,
-                   *_Output;
-            PID*   _pilote;
-            double byteToDouble( byte buf[2] );
-            void   doubleToByte( float val, byte buf[2]);
+private :  double byteToDouble( byte buf[2] );
+           void   doubleToByte( float val, byte buf[2]);
 };
 #endif

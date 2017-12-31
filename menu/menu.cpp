@@ -46,7 +46,7 @@ switch(btn)
   case RIGHT  : 
     switch( _Item )
         {
-        case MENU_CAP  :  _data->change_cap  (     delta);     break;
+        case MENU_CAP  :  _data->change_cap  ( delta*10 );     break;
         case MENU_KP   :  _data->change_param(KP,  delta);     break;
         case MENU_KI   :  _data->change_param(KI,  delta);     break;
         case MENU_KD   :  _data->change_param(KD,  delta);     break;
@@ -88,7 +88,7 @@ _lcd->print(_titre[_Item]);
 switch( _Item )
   {
   case MENU_CAP :  _lcd->setCursor(9, 0); 
-                   _lcd->print( _data->get_cap() );
+                   _lcd->print( _data->get_param(CAP), 0 );
                    _lcd->setCursor(9, 1);
                    if( _data->get_actif() )     _lcd->print( "ACTIF " );
                    else                         _lcd->print( "PAUSE " ); 
@@ -123,7 +123,7 @@ _data->pull_param( val );
 
 efface_line(1);
 _lcd->print( "Cap :");
-_lcd->print( (int)val[0] );
+_lcd->print( (int)val[0]/10 );
 _lcd->setCursor(10, 1);
 _lcd->print( "Kp  :");
 _lcd->print( (float)(val[1])/10,1 );

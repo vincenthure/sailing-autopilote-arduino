@@ -26,7 +26,7 @@ bool    actif = true;
 
 Adafruit_BNO055    bno  = Adafruit_BNO055(55);
 PID                pilote(&Input, &Output, &Setpoint, Kp, Ki, Kd, P_ON_M, REVERSE);
-Transfert          transfert( &pilote, &Cap, &Kp, &Ki, &Kd, &Imax, &Vmin, &Input, &Output );
+Transfert          transfert;
 Calibration        calibration( &bno );
 
 void setup()
@@ -47,8 +47,6 @@ void setup()
   Serial.print("#");           // envoie un message pour dire qu'il est pret
   }
 
-
-
 void loop()
   {
   imu::Vector<3> euler = bno.getVector(Adafruit_BNO055::VECTOR_EULER);
@@ -67,11 +65,12 @@ void loop()
   if( Serial.available() )        // check Serial port
     switch( Serial.read() )
       {
-      case '#' :  transfert.send_baregraphe();
+      case '#' :  transfert.send_data_2( Input, Output );
                   break;
-      case '@' :  transfert.get_data();
+      case '@' :  transfert.get_data_6( &Cap, &Kp, &Ki, &Kd, &Imax, &Vmin );
+                  pilote.SetTunings( Kp, Ki, Kd) ; 
                   break;
-      case '&' :  transfert.send_data();
+      case '&' :  transfert.send_data_6( Cap, Kp, Ki, Kd, Imax, Vmin);
                   break;
       case '$' :  actif = Serial.read();
                   break;
@@ -81,6 +80,7 @@ void loop()
       }  
 
   }
+  
 bool is_negatif( float val )
 {
 if( val<0 ) return HIGH;

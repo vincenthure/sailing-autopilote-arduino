@@ -50,7 +50,7 @@ data.pull_bargraph( request );
 lcd.setCursor(0, 2);
 bargraphe.draw( request[0]/2 );       // ecart de cap
 lcd.setCursor(0, 3);
-bargraphe.draw( request[1]/2.56 );    //  compensation
+bargraphe.draw( request[1]/25.6 );    //  compensation
 
 menu.select(); 
 
