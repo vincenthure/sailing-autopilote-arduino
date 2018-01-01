@@ -1,7 +1,7 @@
 #ifndef menu_h
 #define menu_h
 
-#include <LiquidCrystal_I2C.h>
+#include "LiquidCrystal_I2C.h"
 #include "Arduino.h"
 #include "data.h"
 #include "bouton.h"

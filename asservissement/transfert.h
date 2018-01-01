@@ -1,7 +1,6 @@
 #ifndef transfert_h
 #define transfert_h
 
-#include <PID_v1.h>
 #include "Arduino.h"
 
 #define BUFF_SIZE    12

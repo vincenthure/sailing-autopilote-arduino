@@ -17,17 +17,16 @@ void Calibration::make()
 byte calibration[CALIBRATION_SIZE];
 bool bMAG,bGYR,bACC,b;
 
-do  
-{
-bMAG = _bno->getCalibState(Adafruit_BNO055::CALIB_STAT_MAG);
-bGYR = _bno->getCalibState(Adafruit_BNO055::CALIB_STAT_GYR);
-bACC = _bno->getCalibState(Adafruit_BNO055::CALIB_STAT_ACC);
-b    = _bno->getCalibState(Adafruit_BNO055::CALIB_STAT_SYS);
-Serial.print(bMAG);
-Serial.print(bGYR);
-Serial.print(bACC);
-Serial.println(b);
-}while( bMAG==false || bGYR==false  || bACC==false || b==false  );
+do{
+  bMAG = _bno->getCalibState(Adafruit_BNO055::CALIB_STAT_MAG);
+  bGYR = _bno->getCalibState(Adafruit_BNO055::CALIB_STAT_GYR);
+  bACC = _bno->getCalibState(Adafruit_BNO055::CALIB_STAT_ACC);
+  b    = _bno->getCalibState(Adafruit_BNO055::CALIB_STAT_SYS);
+  Serial.print(bMAG);
+  Serial.print(bGYR);
+  Serial.print(bACC);
+  Serial.println(b);
+  }while( bMAG==false || bGYR==false  || bACC==false || b==false  );
 
 for( int i=0; i<CALIBRATION_SIZE; i++ )  calibration[i]=0;
 _bno->getCalibData(calibration);   

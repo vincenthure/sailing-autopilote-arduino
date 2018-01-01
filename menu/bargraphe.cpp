@@ -1,7 +1,6 @@
 #include "bargraphe.h"
 #include "Arduino.h"
- 
-#include <LiquidCrystal_I2C.h>
+#include "LiquidCrystal_I2C.h"
 
 byte Bargraphe::_level1[8] = { B10000, B10000, B10000, B10000, B10000, B10000, B10000, B10000 };
 byte Bargraphe::_level2[8] = { B11000, B11000, B11000, B11000, B11000, B11000, B11000, B11000 };

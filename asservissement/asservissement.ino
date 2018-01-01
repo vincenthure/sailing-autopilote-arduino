@@ -1,11 +1,11 @@
 #include "calibration.h"
 #include "transfert.h"
-#include <PID_v1.h>
+#include "PID_v1.h"
 
 #include <Wire.h>
-#include <Adafruit_Sensor.h>
-#include <Adafruit_BNO055.h>
-#include <utility/imumaths.h>
+#include "Adafruit_Sensor.h"
+#include "Adafruit_BNO055.h"
+#include "utility/imumaths.h"
 
 #define PIN_PWM       10
 #define PIN_REVERSE   11
@@ -65,17 +65,17 @@ void loop()
   if( Serial.available() )        // check Serial port
     switch( Serial.read() )
       {
-      case '#' :  transfert.send_data_2( Input, Output );
+      case '#' :  transfert.send_data_2( Input, Output );                      // send data to baregraphe
                   break;
-      case '@' :  transfert.get_data_6( &Cap, &Kp, &Ki, &Kd, &Imax, &Vmin );
-                  pilote.SetTunings( Kp, Ki, Kd) ; 
+      case '@' :  transfert.get_data_6( &Cap, &Kp, &Ki, &Kd, &Imax, &Vmin );   // get parametre
+                  pilote.SetTunings( Kp, Ki, Kd) ;                             // adjust PID
                   break;
-      case '&' :  transfert.send_data_6( Cap, Kp, Ki, Kd, Imax, Vmin);
+      case '&' :  transfert.send_data_6( Cap, Kp, Ki, Kd, Imax, Vmin);         //send info
                   break;
-      case '$' :  actif = Serial.read();
+      case '$' :  actif = Serial.read();                                       // change mode
                   break;
-      case '!' :  calibration.make();
-                  Serial.write('!');
+      case '!' :  calibration.make();                                          // processing calibration
+                  Serial.write('!');                                           // averti que c'est fini
                   break;
       }  
 

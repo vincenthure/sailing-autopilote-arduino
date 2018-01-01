@@ -2,7 +2,7 @@
 #define bargraphe_h
 
 #include "Arduino.h"
-#include <LiquidCrystal_I2C.h>
+#include "LiquidCrystal_I2C.h"
 
 class Bargraphe
 {
