@@ -10,6 +10,7 @@
 #define PIN_PWM       10
 #define PIN_REVERSE   11
 #define PIN_AMP        0
+#define DC_POWER      12
 
 double  Setpoint=0,
         Cap,
@@ -60,7 +61,7 @@ void loop()
       pilote.Compute();
       
       Pwm = adjust_output( Output );
-      analogWrite (PIN_PWM, abs(Pwm) );                          // PWM
+      analogWrite (PIN_PWM, abs(Pwm) );                  // PWM
       digitalWrite(PIN_REVERSE, is_negatif( Pwm ));      // REVERSE MODE
       }
       
@@ -100,12 +101,17 @@ if( a>180 && b<180 )   return 360-b+a;
 
 double adjust_output( double x )
 {
-double c,y;
+double y;
+double abs_x = abs(x);
 
-c = Vmin/12;
-y =  abs(x) * ( 1 - c ) + ( 127 * c );
-if( y<0 ) y=0;
-if( is_negatif(x) ) y *= -1;
-return y;
+// double c = Vmin / DC_POWER;
+// y =  abs(x) * ( 1 - c ) + ( 127 * c );    // courbe de transfert lineaire
+
+double b = 127 - ( 127 / Vmin );
+
+y = (abs_x/Vmin) + b*( 1 - exp( -abs_x/10 ));
+
+if( is_negatif(x) ) return -y;
+else                return  y;
 }
 
