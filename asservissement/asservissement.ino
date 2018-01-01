@@ -49,6 +49,7 @@ void setup()
 
 void loop()
   {
+  double Pwm;
   imu::Vector<3> euler = bno.getVector(Adafruit_BNO055::VECTOR_EULER);
   Heading = euler.x();
 
@@ -57,15 +58,16 @@ void loop()
   if( actif )
       {
       pilote.Compute();
-  
-      analogWrite (PIN_PWM,     abs( Output ) );             // PWM
-      digitalWrite(PIN_REVERSE, is_negatif( Output ));      // REVERSE MODE
+      
+      Pwm = adjust_output( Output );
+      analogWrite (PIN_PWM, abs(Pwm) );                          // PWM
+      digitalWrite(PIN_REVERSE, is_negatif( Pwm ));      // REVERSE MODE
       }
       
   if( Serial.available() )        // check Serial port
     switch( Serial.read() )
       {
-      case '#' :  transfert.send_data_2( Input, Output );                      // send data to baregraphe
+      case '#' :  transfert.send_data_2( Input, Pwm );                      // send data to baregraphe
                   break;
       case '@' :  transfert.get_data_6( &Cap, &Kp, &Ki, &Kd, &Imax, &Vmin );   // get parametre
                   pilote.SetTunings( Kp, Ki, Kd) ;                             // adjust PID
@@ -95,3 +97,15 @@ if( a>180 && b>180 )   return a-b;
 if( a<180 && b>180 )   return 360+a-b;
 if( a>180 && b<180 )   return 360-b+a;
 }
+
+double adjust_output( double x )
+{
+double c,y;
+
+c = Vmin/12;
+y =  abs(x) * ( 1 - c ) + ( 127 * c );
+if( y<0 ) y=0;
+if( is_negatif(x) ) y *= -1;
+return y;
+}
+
