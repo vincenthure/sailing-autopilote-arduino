@@ -45,6 +45,14 @@ doubleToByte( (prm1*10), val+2 );
 Serial.write( val, 4 ); 
 }
 
+void Transfert::send_data_1( double prm )
+{
+byte val[2];
+  
+doubleToByte( (prm*10), val );           
+Serial.write( val, 2 ); 
+}
+
 void Transfert::doubleToByte( float val, byte buf[2])
 {
 int data = (int)val;

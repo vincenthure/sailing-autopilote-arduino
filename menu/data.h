@@ -19,6 +19,15 @@
 #define Imax_init  60
 #define Vmin_init  70
 
+#define INFO_REQUEST        '&'
+#define BAREGRAPHE_REQUEST  '#'
+#define CHANGE_MODE         '$'
+#define MAKE_CALIBRATION    '!'
+#define SAVE_CALIBRATION    '%'
+#define REFRESH_PARAMETER   '@' 
+#define CURRENT_HEADING     '*'  
+#define CAPTEUR_REQUEST     '/'  
+
 class Data
 {
 public :  Data( );
@@ -38,8 +47,12 @@ public :  Data( );
           int   get_cap();
           bool  get_actif();
 
-          void calibration();
-          
+          void  current_heading();
+          void  pull_capteur( int* val );
+
+          void make_calibration();
+          void save_calibration();
+                    
 private : int   _param[PARAM_SIZE];
           bool  _actif;
           int   byteToInt( byte* buf );

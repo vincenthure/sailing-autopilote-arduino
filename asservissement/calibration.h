@@ -18,6 +18,7 @@ class Calibration
 public :  Calibration( Adafruit_BNO055* bno );
           void load();
           void make();
+          void save();
            
 private : Adafruit_BNO055* _bno;
           byte c_data[CALIBRATION_SIZE];

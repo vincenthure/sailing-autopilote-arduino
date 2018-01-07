@@ -7,7 +7,7 @@ char Menu::_titre[MENU_SIZE][21] =
   "Cap :", "Kp :",  "Ki :",  "Kd :" , "I Max :", "V min :",
   "Load Preset 1" , "load Preset 2" , "Load Preset 3" , "Load Default", 
   "Save Preset 1" , "Save Preset 2" , "Save Preset 3" ,  
-  "Info", "Calibration"
+  "Info", "Calibration", "Capteur"
    };
    
 Menu::Menu( Data* data, LiquidCrystal_I2C* lcd )
@@ -46,7 +46,7 @@ switch(btn)
   case RIGHT  : 
     switch( _Item )
         {
-        case MENU_CAP  :  _data->change_cap  ( delta*10 );     break;
+        case MENU_CAP  :  _data->change_cap  (     delta);     break;
         case MENU_KP   :  _data->change_param(KP,  delta);     break;
         case MENU_KI   :  _data->change_param(KI,  delta);     break;
         case MENU_KD   :  _data->change_param(KD,  delta);     break;
@@ -57,7 +57,9 @@ switch(btn)
     
   case VALIDE : switch( _Item )
     {
-    case MENU_CAP           :  _data->change_actif();                     break;
+    case MENU_CAP           :  if(delta==1)  _data->change_actif();
+                               else          _data->current_heading();                     
+                                                                          break;
     case MENU_LOAD_PRESET_1 :  _data->load(1);                            break;
     case MENU_LOAD_PRESET_2 :  _data->load(2);                            break;
     case MENU_LOAD_PRESET_3 :  _data->load(3);                            break;
@@ -66,10 +68,11 @@ switch(btn)
     case MENU_SAVE_PRESET_2 :  if( confirme() ) _data->save(2);           break;
     case MENU_SAVE_PRESET_3 :  if( confirme() ) _data->save(3);           break;
     case MENU_INFO          :  show_info();                               break;
+    case MENU_CAPTEUR       :  show_capteur();                            break;
     case MENU_CALIBRATION   :  if( confirme() ) 
                                   {
-                                  _data->calibration();
-                                  processing();
+                                  processing_calibration();
+                                  _data->save_calibration();
                                   }                                       break; 
     } 
     _Item = MENU_CAP; 
@@ -144,6 +147,21 @@ _lcd->print( (float)(val[5])/10,1 );
 while( _bouton.check_all()==false );
 }
 
+void Menu::show_capteur()
+{
+int  val[2];
+_data->pull_capteur( val );
+
+efface_line(1);
+_lcd->print( "Heading :");
+_lcd->print( (int)val[0]/10,1 );
+efface_line(2);
+_lcd->print( "Input  :");
+_lcd->print( (float)(val[1])/10,1 );
+
+while( _bouton.check_all()==false );
+}
+
 void Menu::next()
 {
 _Item++;
@@ -194,19 +212,32 @@ while(1)
     }  
 }
 
-void Menu::processing()
+void Menu::processing_calibration()
 {
-_lcd->clear();
-_lcd->setCursor(5, 1);
-_lcd->print("Processing");
-while(Serial.read() != '!')
+while(1)
     {
-    efface_line(3);
-    for( int i=0; i<20; i++ ) 
-      {
-      _lcd->write(255);
-      delay(500);
-      }
+    if(_bouton.check_all())     return;
+
+    _data->make_calibration();
+    
+    _lcd->clear();
+    _lcd->setCursor(0, 0);   
+    if( Serial.read() )   _lcd->print("Magnetometre OK"); 
+    else                  _lcd->print("Magnetometre");
+    
+    _lcd->setCursor(0, 1);   
+    if( Serial.read() )   _lcd->print("Gyroscope OK"); 
+    else                  _lcd->print("Gyroscope");
+     
+    _lcd->setCursor(0, 2);   
+    if( Serial.read() )   _lcd->print("Accelerommetre OK"); 
+    else                  _lcd->print("Accelerommetre");
+     
+    _lcd->setCursor(0, 3);         
+    if( Serial.read() )   _lcd->print("Systeme OK"); 
+    else                  _lcd->print("Systeme");
+
+    delay( 500 );
     }  
 }
 

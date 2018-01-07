@@ -21,8 +21,9 @@
 #define MENU_SAVE_PRESET_3  12
 #define MENU_INFO           13
 #define MENU_CALIBRATION    14
+#define MENU_CAPTEUR        15
 
-#define MENU_SIZE           15
+#define MENU_SIZE           16
 
 class Menu
 {
@@ -38,9 +39,10 @@ private : char               _Item;
           void next();
           void previous();
           void show_info();
+          void show_capteur();
           void efface_line( short line );
           bool confirme();
-          void processing();
+          void processing_calibration();
 };
 
 #endif

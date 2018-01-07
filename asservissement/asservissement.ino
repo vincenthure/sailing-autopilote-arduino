@@ -12,6 +12,15 @@
 #define PIN_AMP        0
 #define DC_POWER      12
 
+#define INFO_REQUEST        '&'
+#define BAREGRAPHE_REQUEST  '#'
+#define CHANGE_MODE         '$'
+#define MAKE_CALIBRATION    '!'
+#define SAVE_CALIBRATION    '%'
+#define REFRESH_PARAMETER   '@' 
+#define CURRENT_HEADING     '*'  
+#define CAPTEUR_REQUEST     '/' 
+
 double  Setpoint=0,
         Cap,
         Heading, 
@@ -68,18 +77,31 @@ void loop()
   if( Serial.available() )        // check Serial port
     switch( Serial.read() )
       {
-      case '#' :  transfert.send_data_2( Input, Pwm );                      // send data to baregraphe
-                  break;
-      case '@' :  transfert.get_data_6( &Cap, &Kp, &Ki, &Kd, &Imax, &Vmin );   // get parametre
-                  pilote.SetTunings( Kp, Ki, Kd) ;                             // adjust PID
-                  break;
-      case '&' :  transfert.send_data_6( Cap, Kp, Ki, Kd, Imax, Vmin);         //send info
-                  break;
-      case '$' :  actif = Serial.read();                                       // change mode
-                  break;
-      case '!' :  calibration.make();                                          // processing calibration
-                  Serial.write('!');                                           // averti que c'est fini
-                  break;
+      case BAREGRAPHE_REQUEST : transfert.send_data_2( Input, Pwm );                      // send data to baregraphe
+                                break;
+                                
+      case REFRESH_PARAMETER :  transfert.get_data_6( &Cap, &Kp, &Ki, &Kd, &Imax, &Vmin );   // get parametre
+                                pilote.SetTunings( Kp, Ki, Kd) ;                             // adjust PID
+                                break;
+                  
+      case INFO_REQUEST :       transfert.send_data_6( Cap, Kp, Ki, Kd, Imax, Vmin);         //send info
+                                break;
+                                 
+      case CAPTEUR_REQUEST :    transfert.send_data_2( Heading, Input);         //send info
+                                break;
+
+      case CHANGE_MODE :        actif = Serial.read();                                       // change mode
+                                break;
+                                
+      case MAKE_CALIBRATION :   calibration.make();                                          // processing calibration
+                                break;
+
+      case SAVE_CALIBRATION :   calibration.save();                                          // SAVING calibration
+                                break;
+                                
+      case CURRENT_HEADING :    Cap = Heading;
+                                transfert.send_data_1( Heading );  
+                                break;
       }  
 
   }

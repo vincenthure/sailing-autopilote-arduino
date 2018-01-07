@@ -5,7 +5,7 @@
 #include "data.h" 
 #include "menu.h" 
 
-#define RESET 4
+#define PIN_RESET 4
 
 LiquidCrystal_I2C lcd(0x20,20,4);
 Bargraphe         bargraphe(&lcd);
@@ -14,10 +14,10 @@ Menu              menu(&data,&lcd);
 
 void setup()
 {
-pinMode( RESET, OUTPUT);
-digitalWrite( RESET, LOW );     // Reset l'arduino asservisssement
+pinMode( PIN_RESET, OUTPUT);
+digitalWrite( PIN_RESET, LOW );     // Reset l'arduino asservisssement
 delay( 10 );
-digitalWrite( RESET , HIGH ); 
+digitalWrite( PIN_RESET , HIGH ); 
 
 Serial.begin(9600); 
 
